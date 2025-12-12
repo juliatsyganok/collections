@@ -1,6 +1,5 @@
-import random
-
-class IndexDict:
+from list_book import BookCollection
+class IndexDict():
     def __init__(self):
         self._by_isbn = {}
         self._by_author = {}
@@ -10,8 +9,13 @@ class IndexDict:
     def __len__(self) -> int:
         return len(self._by_isbn)
     
-    def __getitem__(self, key: str):
-        return self._by_isbn[key]
+    def __getitem__(self, key):
+        if isinstance(key, str):
+            return self._by_isbn[key]
+        elif isinstance(key, int):
+            return self._by_year.get(key, [])
+        else:
+            raise KeyError("Неверный тип")
     
     def __iter__(self):
         return iter(self._by_isbn.values())
@@ -20,9 +24,10 @@ class IndexDict:
         return isbn in self._by_isbn
     
     def __repr__(self):
-        return f"IndexDict({len(self._by_isbn)} books indexed)"
+        return f"Всего {len(self._by_isbn)} книг с индексом"
     
     def add_book(self, book):
+        """добавление по разным ключам"""
         self._by_isbn[book.isbn] = book
         if book.author not in self._by_author:
             self._by_author[book.author] = []
@@ -37,6 +42,7 @@ class IndexDict:
         self._by_genre[book.genre].append(book)
     
     def remove_book(self, book):
+        """удаление по раным ключам"""
         if book.isbn in self._by_isbn:
             del self._by_isbn[book.isbn]
 
@@ -57,18 +63,24 @@ class IndexDict:
     
     def find_by_author(self, author: str):
         """Поиск книг по автору"""
-        return self._by_author.get(author, [])
-    
+        books_list = self._by_author.get(author, [])
+        result = BookCollection()
+        for book in books_list:
+            result.add_book(book)
+        return result
+        
     def find_by_year(self, year: int):
         """Поиск книг по году"""
-        return self._by_year.get(year, [])
-    
-    def find_by_genre(self, genre: str):
-        """Поиск книг по жанру"""
-        return self._by_genre.get(genre, [])
-    
-    def get_random_isbn(self) -> str:
-        """Получить случайный ISBN из индекса"""
-        if not self._by_isbn:
-            raise ValueError("Индекс пуст")
-        return random.choice(list(self._by_isbn.keys()))
+        books_list = self._by_year.get(year, [])
+        result = BookCollection()
+        for book in books_list:
+            result.add_book(book)
+        return result
+        
+    def find_by_year(self, year: int):
+        """Поиск книг по году"""
+        books_list = self._by_year.get(year, [])
+        result = BookCollection()
+        for book in books_list:
+            result.add_book(book)
+        return result

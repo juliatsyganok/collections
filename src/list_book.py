@@ -1,5 +1,3 @@
-import random 
-
 class BookCollection:
     def __init__(self):
         self._books = []
@@ -12,9 +10,9 @@ class BookCollection:
     
     def __getitem__(self, key):
         if isinstance(key, slice):
-            new_collection = BookCollection()
-            new_collection._books = self._books[key]
-            return new_collection
+            new_col = BookCollection()
+            new_col._books = self._books[key]
+            return new_col
         else:
             return self._books[key]
     
@@ -22,7 +20,7 @@ class BookCollection:
         return book in self._books
     
     def __repr__(self):
-        return f"BookCollection({len(self._books)} books)"
+        return f"Всего {len(self._books)} книг"
     
     def add_book(self, book):
         """Добавление книги в коллекцию"""
@@ -33,12 +31,5 @@ class BookCollection:
         if 0 <= index < len(self._books):
             del self._books[index]
         else:
-            raise IndexError("Индекс вне диапазона")
-    
-    def get_random_book(self):
-        """Получить случайную книгу"""
-        if len(self._books) == 0:
-            raise ValueError("Коллекция пуста")
-        return random.choice(self._books)
-
+            raise IndexError("Ошибка индекса")
 
